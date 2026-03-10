@@ -1,1 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>The New Valdoria</title>
 
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+a{ color:yellow; }
+
+header{
+text-align:center;
+padding:30px;
+border-bottom:2px solid yellow;
+}
+
+section{ padding:30px; }
+
+.card{
+background:#111;
+padding:20px;
+margin:20px;
+border-radius:10px;
+box-shadow:0 0 10px black;
+}
+
+button{
+background:yellow;
+color:black;
+border:none;
+padding:10px 20px;
+cursor:pointer;
+border-radius:5px;
+font-weight:bold;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin:5px 0;
+background:#222;
+color:white;
+border:1px solid yellow;
+}
+
+/* roue */
+
+#wheelContainer{
+text-align:center;
+position:relative;
+}
+
+#pointer{
+font-size:40px;
+color:yellow;
+}
+
+#wheel{
+width:300px;
+height:300px;
+border-radius:50%;
+border:6px solid yellow;
+margin:auto;
+position:relative;
+overflow:hidden;
+transition:transform 4s cubic-bezier(0.33,1,0.68,1);
+}
+
+.slice{
+position:absolute;
+width:50%;
+height:50%;
+transform-origin:100% 100%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:14px;
+color:white;
+}
+
+.slice span{
+transform:skewY(60deg) rotate(30deg);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏰 The New Valdoria</h1>
+<p>IP : 151.240.100.21:25582 | Version : 1.21.11</p>
+
+<a href="https://discord.com/invite/yKXFcCNq5S">Discord</a> |
+<a href="https://www.tiktok.com/@the_new_valdoria">TikTok</a>
+</header>
+
+<section class="card">
+<h2>🏰 Bienvenue sur The New Valdoria</h2>
+<p>Un serveur Minecraft communautaire avec événements, économie et mini-jeux.</p>
+</section>
+
+<section class="card">
+
+<h2>🎡 Roue de la chance</h2>
+
+<div id="wheelContainer">
+
+<div id="pointer">▼</div>
+
+<div id="wheel">
+
+<div class="slice" style="background:red; transform:rotate(0deg) skewY(-60deg);">
+<span>PERDU</span>
+</div>
+
+<div class="slice" style="background:green; transform:rotate(60deg) skewY(-60deg);">
+<span>GAGNÉ</span>
+</div>
+
+<div class="slice" style="background:red; transform:rotate(120deg) skewY(-60deg);">
+<span>PERDU</span>
+</div>
+
+<div class="slice" style="background:green; transform:rotate(180deg) skewY(-60deg);">
+<span>GAGNÉ</span>
+</div>
+
+<div class="slice" style="background:red; transform:rotate(240deg) skewY(-60deg);">
+<span>PERDU</span>
+</div>
+
+<div class="slice" style="background:red; transform:rotate(300deg) skewY(-60deg);">
+<span>PERDU</span>
+</div>
+
+</div>
+</div>
+
+<br>
+
+<button onclick="spin()">Tourner la roue</button>
+
+<p id="result"></p>
+
+</section>
+
+<section class="card">
+
+<h2>🎫 Ouvrir un Ticket</h2>
+
+<input id="discord" placeholder="Pseudo Discord">
+<input id="minecraft" placeholder="Pseudo Minecraft">
+<textarea id="reason" placeholder="Raison"></textarea>
+
+<button onclick="createTicket()">Créer le ticket</button>
+
+</section>
+
+<section class="card">
+
+<h2>🛠 Panel Admin</h2>
+<div id="tickets"></div>
+
+</section>
+
+<script>
+
+/* tickets */
+
+let tickets=[]
+
+function createTicket(){
+
+let discord=document.getElementById("discord").value
+let mc=document.getElementById("minecraft").value
+let reason=document.getElementById("reason").value
+
+let ticket={
+discord:discord,
+mc:mc,
+reason:reason
+}
+
+tickets.push(ticket)
+
+updateTickets()
+
+}
+
+function updateTickets(){
+
+let container=document.getElementById("tickets")
+container.innerHTML=""
+
+tickets.forEach((t,i)=>{
+
+container.innerHTML+=`
+<div class="card">
+Discord : ${t.discord}<br>
+Minecraft : ${t.mc}<br>
+Raison : ${t.reason}<br>
+<button onclick="closeTicket(${i})">Fermer</button>
+</div>
+`
+
+})
+
+}
+
+function closeTicket(i){
+tickets.splice(i,1)
+updateTickets()
+}
+
+/* roue */
+
+let rotation=0
+
+function spin(){
+
+let wheel=document.getElementById("wheel")
+
+let random=Math.floor(Math.random()*360)
+
+rotation+=720+random
+
+wheel.style.transform="rotate("+rotation+"deg)"
+
+setTimeout(()=>{
+
+let angle=rotation%360
+let segment=Math.floor(angle/60)
+
+let result="❌ Perdu"
+
+if(segment==1 || segment==3){
+result="🎉 Gagné !"
+}
+
+document.getElementById("result").innerText=result
+
+},4000)
+
+}
+
+</script>
+
+</body>
+</html>
